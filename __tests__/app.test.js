@@ -16,6 +16,9 @@ describe('app routes', () => {
   });
 
   afterAll(() => {
+    mongoose.connection.collections['books'].drop(function() {
+      console.log('collection dropped');
+    });
     return mongoose.connection.close();
   });
 
@@ -88,6 +91,59 @@ describe('app routes', () => {
             'mix ingredients',
             'put dough on cookie sheet',
             'bake for 10 minutes'
+          ],
+          __v: 0
+        });
+      });
+  });
+
+  it('can get a single recipe', async() => {
+    const recipe = await Recipe.create({
+      name: 'food',
+      directions: [
+        'open the fidge',
+        'pick something',
+        'if its in a package, unwrap',
+        'eat'
+      ],
+    });
+
+    return request(app)
+      .get(`/api/v1/recipes/${recipe._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          name: 'food',
+          directions: [
+            'open the fidge',
+            'pick something',
+            'if its in a package, unwrap',
+            'eat'
+          ],
+          __v: 0
+        });
+      });
+  });
+
+  it('can delete a recipe', async() => {
+    const recipe = await Recipe.create({
+      name: 'rotten food',
+      directions: [
+        'ewww who left this out?',
+        'should i eat it?',
+        'na throw it away'
+      ],
+    });
+    return request(app)
+      .del(`/api/v1/recipes/${recipe._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          name: 'rotten food',
+          directions: [
+            'ewww who left this out?',
+            'should i eat it?',
+            'na throw it away'
           ],
           __v: 0
         });
