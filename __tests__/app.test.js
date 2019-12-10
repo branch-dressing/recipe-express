@@ -33,7 +33,8 @@ describe('app routes', () => {
           'mix ingredients',
           'put dough on cookie sheet',
           'bake for 10 minutes'
-        ]
+        ],
+        ingredients: []
       })
       .then(res => {
         expect(res.body).toEqual({
@@ -45,6 +46,7 @@ describe('app routes', () => {
             'put dough on cookie sheet',
             'bake for 10 minutes'
           ],
+          ingredients: [],
           __v: 0
         });
       });
@@ -78,6 +80,7 @@ describe('app routes', () => {
         'put dough on cookie sheet',
         'bake for 10 minutes'
       ],
+      ingredients: []
     });
 
     return request(app)
@@ -93,6 +96,7 @@ describe('app routes', () => {
             'put dough on cookie sheet',
             'bake for 10 minutes'
           ],
+          ingredients: [],
           __v: 0
         });
       });
@@ -107,6 +111,7 @@ describe('app routes', () => {
         'if its in a package, unwrap',
         'eat'
       ],
+      ingredients: []
     });
 
     return request(app)
@@ -121,6 +126,7 @@ describe('app routes', () => {
             'if its in a package, unwrap',
             'eat'
           ],
+          ingredients: [],
           __v: 0
         });
       });
@@ -134,6 +140,7 @@ describe('app routes', () => {
         'should i eat it?',
         'na throw it away'
       ],
+      ingredients: []
     });
     return request(app)
       .del(`/api/v1/recipes/${recipe._id}`)
@@ -146,6 +153,7 @@ describe('app routes', () => {
             'should i eat it?',
             'na throw it away'
           ],
+          ingredients: [],
           __v: 0
         });
       });
