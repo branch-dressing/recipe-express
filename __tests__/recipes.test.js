@@ -16,7 +16,7 @@ describe('app routes', () => {
   });
 
   afterAll(() => {
-    mongoose.connection.collections['books'].drop(function() {
+    mongoose.connection.collections['recipes'].drop(function() {
       // eslint-disable-next-line no-console
       console.log('collection dropped');
     });
