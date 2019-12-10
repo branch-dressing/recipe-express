@@ -17,6 +17,7 @@ describe('app routes', () => {
 
   afterAll(() => {
     mongoose.connection.collections['books'].drop(function() {
+      // eslint-disable-next-line no-console
       console.log('collection dropped');
     });
     return mongoose.connection.close();
