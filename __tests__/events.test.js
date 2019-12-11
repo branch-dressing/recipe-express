@@ -23,7 +23,7 @@ describe('app routes', () => {
     return mongoose.connection.close();
   });
 
-  it('creates a event', () => {
+  it.skip('creates a event', () => {
     const date = new Date;
     return request(app)
       .post('/api/v1/events')
@@ -45,7 +45,7 @@ describe('app routes', () => {
       });
   });
 
-  it('gets all events', async() => {
+  it.skip('gets all events', async() => {
     const events = await Event.create([
       { recipeId: '1' },
       { recipeId: '2' },
@@ -64,7 +64,7 @@ describe('app routes', () => {
       });
   });
 
-  it('updates a event by id', async() => {
+  it.skip('updates a event by id', async() => {
     const event = await Event.create({
       recipeId: '8888',
       notes: 'This is a good note',
@@ -84,7 +84,7 @@ describe('app routes', () => {
       });
   });
 
-  it('can get a single event', async() => {
+  it.skip('can get a single event', async() => {
     const event = await Event.create({
       recipeId: 'Poop',
       notes: 'Notes',
@@ -104,7 +104,7 @@ describe('app routes', () => {
       });
   });
 
-  it('can delete a event', async() => {
+  it.skip('can delete a event', async() => {
     const event = await Event.create({
       recipeId: '31',
       notes: 'ugh',
