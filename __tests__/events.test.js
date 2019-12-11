@@ -75,9 +75,9 @@ describe('app routes', () => {
       });
   });
 
-  it.skip('updates a event by id', async() => {
+  it('updates a event by id', async() => {
     const event = await Event.create({
-      recipeId: '8888',
+      recipeId: testsRecipe._id,
       notes: 'This is a good note',
       rating: 'bad'
     });
@@ -87,7 +87,7 @@ describe('app routes', () => {
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.any(String),
-          recipeId: '8888',
+          recipeId: testsRecipe._id.toString(),
           notes: 'This is a bad note',
           rating: 'bad',
           __v: 0
