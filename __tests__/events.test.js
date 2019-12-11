@@ -95,9 +95,9 @@ describe('app routes', () => {
       });
   });
 
-  it.skip('can get a single event', async() => {
+  it('can get a single event', async() => {
     const event = await Event.create({
-      recipeId: 'Poop',
+      recipeId: testsRecipe._id,
       notes: 'Notes',
       rating: 'Yep'
     });
@@ -107,7 +107,7 @@ describe('app routes', () => {
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.any(String),
-          recipeId: 'Poop',
+          recipeId: testsRecipe._id.toString(),
           notes: 'Notes',
           rating: 'Yep',
           __v: 0
