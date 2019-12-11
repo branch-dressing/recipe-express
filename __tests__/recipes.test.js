@@ -5,6 +5,7 @@ const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 const Recipe = require('../lib/models/Recipe');
+const Event = require('../lib/models/Event');
 
 describe('app routes', () => {
   beforeAll(() => {
@@ -16,10 +17,6 @@ describe('app routes', () => {
   });
 
   afterAll(() => {
-    mongoose.connection.collections['recipes'].drop(function() {
-      // eslint-disable-next-line no-console
-      console.log('collection dropped');
-    });
     return mongoose.connection.close();
   });
 
@@ -103,6 +100,7 @@ describe('app routes', () => {
   });
 
   it('can get a single recipe', async() => {
+    const date = new Date;
     const recipe = await Recipe.create({
       name: 'food',
       directions: [
@@ -113,12 +111,18 @@ describe('app routes', () => {
       ],
       ingredients: []
     });
+    const event = await Event.create({
+      recipeId: recipe._id,
+      date: date,
+      notes: 'diff every time I make',
+      rating: 'hard to say'
+    });
 
     return request(app)
       .get(`/api/v1/recipes/${recipe._id}`)
       .then(res => {
         expect(res.body).toEqual({
-          _id: expect.any(String),
+          _id: recipe._id.toString(),
           name: 'food',
           directions: [
             'open the fidge',
@@ -127,7 +131,15 @@ describe('app routes', () => {
             'eat'
           ],
           ingredients: [],
-          __v: 0
+          events: [{
+            _id: event._id.toString(),
+            __v: 0,
+            recipeId: recipe._id.toString(),
+            date: date.toISOString(),
+            notes: 'diff every time I make',
+            rating: 'hard to say'
+          }],
+          __v: 0,
         });
       });
   });

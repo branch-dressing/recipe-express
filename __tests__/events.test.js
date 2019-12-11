@@ -13,6 +13,10 @@ describe('app routes', () => {
   });
   
   let testsRecipe;
+  beforeEach(() => {
+    return mongoose.connection.dropDatabase();
+  });
+
   beforeEach(async() => {
     testsRecipe = await Recipe.create({
       name: 'Cookies',
@@ -23,7 +27,6 @@ describe('app routes', () => {
         'bake for 10 minutes'
       ]
     });
-    return mongoose.connection.dropDatabase();
   });
 
   afterAll(() => {
