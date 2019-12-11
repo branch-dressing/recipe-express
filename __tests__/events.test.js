@@ -115,9 +115,9 @@ describe('app routes', () => {
       });
   });
 
-  it.skip('can delete a event', async() => {
+  it('can delete a event', async() => {
     const event = await Event.create({
-      recipeId: '31',
+      recipeId: testsRecipe._id,
       notes: 'ugh',
       rating: '5'
     });
@@ -125,7 +125,7 @@ describe('app routes', () => {
       .del(`/api/v1/events/${event._id}`)
       .then(res => {
         expect(res.body).toEqual({
-          recipeId: '31',
+          recipeId: testsRecipe._id.toString(),
           notes: 'ugh',
           rating: '5',
           _id: expect.any(String),
