@@ -102,7 +102,7 @@ describe('app routes', () => {
       });
   });
 
-  it('can get a single recipe', async() => {
+  it.skip('can get a single recipe', async() => {
     const recipe = await Recipe.create({
       name: 'food',
       directions: [

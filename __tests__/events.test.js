@@ -12,7 +12,17 @@ describe('app routes', () => {
     connect();
   });
   
-  beforeEach(() => {
+  let testsRecipe;
+  beforeEach(async() => {
+    testsRecipe = await Recipe.create({
+      name: 'Cookies',
+      directions: [
+        'preheat oven to 375',
+        'mix ingredients',
+        'put dough on cookie sheet',
+        'bake for 10 minutes'
+      ]
+    });
     return mongoose.connection.dropDatabase();
   });
 
@@ -25,16 +35,6 @@ describe('app routes', () => {
   });
 
   it('creates a event', async() => {
-    const testsRecipe = await Recipe.create({
-      name: 'Cookies',
-      directions: [
-        'preheat oven to 375',
-        'mix ingredients',
-        'put dough on cookie sheet',
-        'bake for 10 minutes'
-      ]
-    });
-
     const date = new Date;
     return request(app)
       .post('/api/v1/events')
@@ -56,20 +56,20 @@ describe('app routes', () => {
       });
   });
 
-  it.skip('gets all events', async() => {
+  it('gets all events', async() => {
     const events = await Event.create([
-      { recipeId: '1' },
-      { recipeId: '2' },
-      { recipeId: '3' }
+      { recipeId: testsRecipe._id },
+      { recipeId: testsRecipe._id },
+      { recipeId: testsRecipe._id }
     ]);
 
     return request(app)
       .get('/api/v1/events')
       .then(res => {
-        events.forEach(event => {
+        events.forEach(() => {
           expect(res.body).toContainEqual({
             _id: expect.any(String),
-            recipeId: event.recipeId,
+            recipeId: testsRecipe._id.toString(),
           });
         });
       });
