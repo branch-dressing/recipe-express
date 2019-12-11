@@ -45,11 +45,11 @@ describe('app routes', () => {
       });
   });
 
-  it.skip('gets all events', async() => {
+  it('gets all events', async() => {
     const events = await Event.create([
-      { name: 'cookies', directions: [] },
-      { name: 'cake', directions: [] },
-      { name: 'pie', directions: [] }
+      { recipeId: '1' },
+      { recipeId: '2' },
+      { recipeId: '3' }
     ]);
 
     return request(app)
@@ -57,23 +57,28 @@ describe('app routes', () => {
       .then(res => {
         events.forEach(event => {
           expect(res.body).toContainEqual({
-            _id: event._id.toString(),
-            name: event.name
+            _id: expect.any(String),
+            recipeId: event.recipeId,
           });
         });
       });
   });
 
-  it.skip('updates a event by id', async() => {
+  it('updates a event by id', async() => {
     const event = await Event.create({
+      recipeId: '8888',
+      notes: 'This is a good note',
+      rating: 'bad'
     });
-
     return request(app)
       .patch(`/api/v1/events/${event._id}`)
-      .send({ name: 'good cookies' })
+      .send({ notes: 'This is a bad note' })
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.any(String),
+          recipeId: '8888',
+          notes: 'This is a bad note',
+          rating: 'bad',
           __v: 0
         });
       });
