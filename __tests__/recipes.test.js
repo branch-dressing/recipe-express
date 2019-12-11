@@ -145,6 +145,7 @@ describe('app routes', () => {
   });
 
   it('can delete a recipe', async() => {
+    const date = new Date;
     const recipe = await Recipe.create({
       name: 'rotten food',
       directions: [
@@ -154,11 +155,17 @@ describe('app routes', () => {
       ],
       ingredients: []
     });
+    const event = await Event.create({
+      recipeId: recipe._id,
+      date: date,
+      notes: 'garbage',
+      rating: 'I wanna say 2?'
+    });
     return request(app)
       .del(`/api/v1/recipes/${recipe._id}`)
       .then(res => {
         expect(res.body).toEqual({
-          _id: expect.any(String),
+          _id: recipe._id.toString(),
           name: 'rotten food',
           directions: [
             'ewww who left this out?',
@@ -166,6 +173,14 @@ describe('app routes', () => {
             'na throw it away'
           ],
           ingredients: [],
+          events: [{
+            _id: event._id.toString(),
+            __v: 0,
+            recipeId: recipe._id.toString(),
+            date: date.toISOString(),
+            notes: 'garbage',
+            rating: 'I wanna say 2?'
+          }],
           __v: 0
         });
       });
