@@ -16,6 +16,10 @@ describe('app routes', () => {
   });
 
   afterAll(() => {
+    mongoose.connection.collections['recipes'].drop(function() {
+      // eslint-disable-next-line no-console
+      console.log('collection dropped');
+    });
     return mongoose.connection.close();
   });
 
@@ -29,7 +33,8 @@ describe('app routes', () => {
           'mix ingredients',
           'put dough on cookie sheet',
           'bake for 10 minutes'
-        ]
+        ],
+        ingredients: []
       })
       .then(res => {
         expect(res.body).toEqual({
@@ -41,6 +46,7 @@ describe('app routes', () => {
             'put dough on cookie sheet',
             'bake for 10 minutes'
           ],
+          ingredients: [],
           __v: 0
         });
       });
@@ -74,6 +80,7 @@ describe('app routes', () => {
         'put dough on cookie sheet',
         'bake for 10 minutes'
       ],
+      ingredients: []
     });
 
     return request(app)
@@ -89,6 +96,64 @@ describe('app routes', () => {
             'put dough on cookie sheet',
             'bake for 10 minutes'
           ],
+          ingredients: [],
+          __v: 0
+        });
+      });
+  });
+
+  it('can get a single recipe', async() => {
+    const recipe = await Recipe.create({
+      name: 'food',
+      directions: [
+        'open the fidge',
+        'pick something',
+        'if its in a package, unwrap',
+        'eat'
+      ],
+      ingredients: []
+    });
+
+    return request(app)
+      .get(`/api/v1/recipes/${recipe._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          name: 'food',
+          directions: [
+            'open the fidge',
+            'pick something',
+            'if its in a package, unwrap',
+            'eat'
+          ],
+          ingredients: [],
+          __v: 0
+        });
+      });
+  });
+
+  it('can delete a recipe', async() => {
+    const recipe = await Recipe.create({
+      name: 'rotten food',
+      directions: [
+        'ewww who left this out?',
+        'should i eat it?',
+        'na throw it away'
+      ],
+      ingredients: []
+    });
+    return request(app)
+      .del(`/api/v1/recipes/${recipe._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          name: 'rotten food',
+          directions: [
+            'ewww who left this out?',
+            'should i eat it?',
+            'na throw it away'
+          ],
+          ingredients: [],
           __v: 0
         });
       });
