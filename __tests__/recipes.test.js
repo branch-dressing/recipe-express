@@ -145,51 +145,52 @@ describe('app routes', () => {
   });
 
   it('can get recipes based on ingredients serached', async() => {
-    const recipes = await Recipe.create([{
-      name: 'Pizza',
-      directions: 'make it good',
-      ingredients: [{
-        amount: 3,
-        measurements: '3 handfuls',
-        name: 'cheese'
-      },
-      {
-        amount: 5,
-        measurements: '5 handfuls',
-        name: 'sauce'
-      },
-      {
-        amount: 2,
-        measurements: '2 slices',
-        name: 'crust'
-      }]
-    },
-    {
-      name: 'PB&J',
-      directions: 'you got this',
-      ingredients: [{
-        amount: 1,
-        measurements: '1 scoop',
-        name: 'peanut butter'
-      },
-      {
-        amount: 1,
-        measurements: '1 scoop',
-        name: 'jelly'
-      },
-      {
-        amount: 2,
-        measurements: '2 slices',
-        name: 'crust'
-      }]
-    }]);
+    const recipes = JSON.parse(JSON.stringify(
+      await Recipe.create([{
+        name: 'Pizza',
+        directions: 'make it good',
+        ingredients: [{
+          amount: 3,
+          measurements: '3 handfuls',
+          name: 'cheese'
+        },
+        {
+          amount: 5,
+          measurements: '5 handfuls',
+          name: 'sauce'
+        },
+        {
+          amount: 2,
+          measurements: '2 slices',
+          name: 'crust'
+        }]
+        },
+        {
+        name: 'PB&J',
+        directions: 'you got this',
+        ingredients: [{
+          amount: 1,
+          measurements: '1 scoop',
+          name: 'peanut butter'
+        },
+        {
+          amount: 1,
+          measurements: '1 scoop',
+          name: 'jelly'
+        },
+        {
+          amount: 2,
+          measurements: '2 slices',
+          name: 'crust'
+        }]
+      }])
+    ));
 
     return request(app)
       .get('/?ingredients=crust')
       .then(res => {
-        let i = 0;
         recipes.forEach(recipe => {
-          expect(res.body[i]).toContainEqual({
+          expect(res.body).toContainEqual({
             _id: recipe._id.toString(),
             name: recipe.name,
             directions: recipe.directions,
@@ -200,7 +201,6 @@ describe('app routes', () => {
             ],
             __v: 0
           });
-          i++;
         });
       });
   });
