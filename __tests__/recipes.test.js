@@ -123,6 +123,7 @@ describe('app routes', () => {
       .then(res => {
         expect(res.body).toEqual({
           _id: recipe._id.toString(),
+          id: recipe._id.toString(),
           name: 'food',
           directions: [
             'open the fidge',
@@ -136,6 +137,11 @@ describe('app routes', () => {
             __v: 0,
             recipeId: recipe._id.toString(),
             date: date.toISOString(),
+            day: 12,
+            id: event.id.toString(),
+            month: 'Dec',
+            weekDay: 'Thursday',
+            year: 2019,
             notes: 'diff every time I make',
             rating: 'hard to say'
           }],
@@ -237,31 +243,5 @@ describe('app routes', () => {
           __v: 0
         }, { deletedCount: 1, n: 1, ok: 1 }]);
       });
-  });
-
-  it('has a working event virtual', async() => {
-    const date = new Date();
-    const recipe = await Recipe.create({
-      name: 'pb&j',
-      directions: ['make it'],
-      ingredients: [{
-        amount: 1,
-        measurements: '1 cup',
-        name: `the stuff`
-      }]
-    });
-    await Event.create({
-      recipeId: recipe._id,
-      date: date,
-      notes: 'this is a test',
-      rating: 'yes'
-    });
-
-    expect(recipe.events).toEqual({
-      recipeId: recipe._id.toString(),
-      date: date,
-      notes: 'this is a test',
-      rating: 'yes'
-    });
   });
 });
