@@ -144,6 +144,67 @@ describe('app routes', () => {
       });
   });
 
+  it('can get recipes based on ingredients serached', async() => {
+    const recipes = await Recipe.create([{
+      name: 'Pizza',
+      directions: 'make it good',
+      ingredients: [{
+        amount: 3,
+        measurements: '3 handfuls',
+        name: 'cheese'
+      },
+      {
+        amount: 5,
+        measurements: '5 handfuls',
+        name: 'sauce'
+      },
+      {
+        amount: 2,
+        measurements: '2 slices',
+        name: 'crust'
+      }]
+    },
+    {
+      name: 'PB&J',
+      directions: 'you got this',
+      ingredients: [{
+        amount: 1,
+        measurements: '1 scoop',
+        name: 'peanut butter'
+      },
+      {
+        amount: 1,
+        measurements: '1 scoop',
+        name: 'jelly'
+      },
+      {
+        amount: 2,
+        measurements: '2 slices',
+        name: 'crust'
+      }]
+    }]);
+
+    return request(app)
+      .get('/?ingredients=crust')
+      .then(res => {
+        let i = 0;
+        recipes.forEach(recipe => {
+          expect(res.body[i]).toContainEqual({
+            _id: recipe._id.toString(),
+            name: recipe.name,
+            directions: recipe.directions,
+            ingredients: [
+              { name: recipe.ingredients[0].name, measurements: recipe.ingredients[0].measurements, amount: recipe.ingredients[0].amount, _id: recipe.ingredients[0]._id.toString() },
+              { name: recipe.ingredients[1].name, measurements: recipe.ingredients[1].measurements, amount: recipe.ingredients[1].amount, _id: recipe.ingredients[1]._id.toString() },
+              { name: recipe.ingredients[2].name, measurements: recipe.ingredients[2].measurements, amount: recipe.ingredients[2].amount, _id: recipe.ingredients[2]._id.toString() }
+            ],
+            __v: 0
+          });
+          i++;
+        });
+      });
+  });
+
   it('can delete a recipe', async() => {
     const date = new Date;
     const recipe = await Recipe.create({
@@ -155,7 +216,7 @@ describe('app routes', () => {
       ],
       ingredients: []
     });
-    const event = await Event.create({
+    await Event.create({
       recipeId: recipe._id,
       date: date,
       notes: 'garbage',
@@ -164,7 +225,7 @@ describe('app routes', () => {
     return request(app)
       .del(`/api/v1/recipes/${recipe._id}`)
       .then(res => {
-        expect(res.body).toEqual({
+        expect(res.body).toEqual([{
           _id: recipe._id.toString(),
           name: 'rotten food',
           directions: [
@@ -173,16 +234,8 @@ describe('app routes', () => {
             'na throw it away'
           ],
           ingredients: [],
-          events: [{
-            _id: event._id.toString(),
-            __v: 0,
-            recipeId: recipe._id.toString(),
-            date: date.toISOString(),
-            notes: 'garbage',
-            rating: 'I wanna say 2?'
-          }],
           __v: 0
-        });
+        }, { deletedCount: 1, n: 1, ok: 1 }]);
       });
   });
 });
