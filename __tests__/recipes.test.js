@@ -238,4 +238,30 @@ describe('app routes', () => {
         }, { deletedCount: 1, n: 1, ok: 1 }]);
       });
   });
+
+  it('has a working event virtual', async() => {
+    const date = new Date();
+    const recipe = await Recipe.create({
+      name: 'pb&j',
+      directions: ['make it'],
+      ingredients: [{
+        amount: 1,
+        measurements: '1 cup',
+        name: `the stuff`
+      }]
+    });
+    await Event.create({
+      recipeId: recipe._id,
+      date: date,
+      notes: 'this is a test',
+      rating: 'yes'
+    });
+
+    expect(recipe.events).toEqual({
+      recipeId: recipe._id.toString(),
+      date: date,
+      notes: 'this is a test',
+      rating: 'yes'
+    });
+  });
 });
