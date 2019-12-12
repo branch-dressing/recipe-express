@@ -110,7 +110,7 @@ describe('app routes', () => {
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.any(String),
-          recipeId: testsRecipe._id.toString(),
+          recipeId: JSON.parse(JSON.stringify(testsRecipe)),
           notes: 'Notes',
           rating: 'Yep',
           __v: 0

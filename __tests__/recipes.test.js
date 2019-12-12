@@ -164,8 +164,8 @@ describe('app routes', () => {
           measurements: '2 slices',
           name: 'crust'
         }]
-        },
-        {
+      },
+      {
         name: 'PB&J',
         directions: 'you got this',
         ingredients: [{
